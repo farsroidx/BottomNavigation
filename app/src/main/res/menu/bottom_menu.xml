@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/a"
+        android:title="Account"
+        android:icon="@drawable/icon_account_circle"/>
+
+    <item android:id="@+id/b"
+        android:title="Basket"
+        android:icon="@drawable/icon_basket"/>
+
+    <item android:id="@+id/c"
+        android:title="Call"
+        android:icon="@drawable/icon_call"/>
+
+    <item android:id="@+id/d"
+        android:title="Data Usage"
+        android:icon="@drawable/icon_data_usage"/>
+
+    <item android:id="@+id/e"
+        android:title="Equalizer Tester"
+        android:icon="@drawable/icon_equalizer"/>
+
+    <item android:id="@+id/f"
+        android:title="Folder"
+        android:icon="@drawable/icon_folder"/>
+
+    <item android:id="@+id/g"
+        android:title="Group"
+        android:icon="@drawable/icon_group"/>
+
+</menu>

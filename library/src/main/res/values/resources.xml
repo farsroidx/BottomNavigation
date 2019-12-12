@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- BottomNavigation -->
+    <declare-styleable name="BottomNavigation">
+        <attr name="menu" />
+    </declare-styleable>
+
+    <color name="defaultBottomNavigationBackground">#FFFFFF</color>
+
+    <!-- /////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
+
+    <!-- BottomNavigationItem -->
+    <declare-styleable name="BottomNavigationItem">
+        <attr name="menu" />
+        <attr name="isActive" format="boolean"/>
+    </declare-styleable>
+
+    <color name="defaultBottomNavigationShapeItemBackground">#e91e63</color>
+
+</resources>
