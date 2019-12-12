@@ -8,11 +8,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginBottom="?attr/actionBarSize"
+            android:layout_height="match_parent">
+
+            <!-- show selected item on other view -->
+
+            ... Any View
+
+        </LinearLayout>
+
         <ir.farsroidx.BottomNavigation
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            app:menu="@menu/your_manu" />
+            app:menu="@menu/your_menu" />
 
     </RelativeLayout>
 
