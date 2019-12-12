@@ -4,6 +4,7 @@
     <!-- BottomNavigation -->
     <declare-styleable name="BottomNavigation">
         <attr name="menu" />
+        <attr name="defaultPosition" />
     </declare-styleable>
 
     <color name="defaultBottomNavigationBackground">#FFFFFF</color>

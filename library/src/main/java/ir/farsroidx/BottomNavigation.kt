@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.util.AttributeSet
-import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -44,6 +43,8 @@ class BottomNavigation : FrameLayout {
             super(context, attrs, defStyleAttr) {
         initial(attrs)
     }
+
+    private var onMenuItemClickListener: OnMenuItemClickListener? = null
 
     private var backLayout = FrameLayout(context)
         .apply {
@@ -95,6 +96,11 @@ class BottomNavigation : FrameLayout {
         }
     }
 
+    @Attr(R2.styleable.BottomNavigation_defaultPosition)
+    fun setDefaultPosition(defaultPosition: Int) {
+        currentItem = defaultPosition
+    }
+
     private fun inflateMenu(menuId: Int) {
         val menu = MenuBuilder(context)
         SupportMenuInflater(context).inflate(menuId , menu)
@@ -105,26 +111,31 @@ class BottomNavigation : FrameLayout {
 
         menuLayout.removeAllViews()
 
-        for (i in 0 until menu.size()){
+        for (position in 0 until menu.size()){
 
             val itemView = BottomNavigationItem(context)
 
-            if (currentItem == i){
-                setupCurrentItem(itemView, menu[i])
+            if (currentItem == position){
+                setupCurrentItem(itemView, menu[position])
             } else {
-                setupItem(itemView, menu[i])
+                setupItem(itemView, menu[position])
             }
 
             itemView.setOnClickListener {
 
-                if (currentItem != i){
-                    currentItem = i
-                    Log.d("CentralCore" , "current: $i")
-
+                if (currentItem != position){
+                    currentItem = position
                     createMenu(menu)
                 } else {
                     itemView.openGroupMenu()
                 }
+
+                onMenuItemClickListener?.onClicked(menu[position], position)
+            }
+
+            itemView.setOnLongClickListener {
+                onMenuItemClickListener?.onLongClicked(menu[position], position)
+                return@setOnLongClickListener false
             }
         }
     }
@@ -187,5 +198,14 @@ class BottomNavigation : FrameLayout {
 
         layout.addView(itemView)
         menuLayout.addView(layout)
+    }
+
+    fun setOnMenuItemClickListener(listener: OnMenuItemClickListener){
+        onMenuItemClickListener = listener
+    }
+
+    interface OnMenuItemClickListener {
+        fun onClicked(menuItem: MenuItem, position: Int)
+        fun onLongClicked(menuItem: MenuItem, position: Int)
     }
 }

@@ -1,16 +1,13 @@
 package ir.farsroidx
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import com.airbnb.paris.annotations.Styleable
@@ -37,6 +34,9 @@ class BottomNavigationItem : RelativeLayout {
     private lateinit var shape: FrameLayout
     private lateinit var imageView: AppCompatImageView
     private lateinit var textView: AppCompatTextView
+
+    private var groupIsOpened = false
+    private var groupChangeClicked = false
 
     private fun initial(attrs: AttributeSet?){
 
@@ -130,9 +130,28 @@ class BottomNavigationItem : RelativeLayout {
 
     fun openGroupMenu() {
 
+        if (groupChangeClicked) {
+            return
+        } else {
+            groupChangeClicked = true
+        }
+
         val ilp = imageView.layoutParams as LinearLayout.LayoutParams
 
+        Thread(Runnable {
 
+            if (groupIsOpened){
+                closeGroup(ilp)
+            } else {
+                openGroup(ilp)
+            }
+
+            groupChangeClicked = false
+
+        }).start()
+    }
+
+    private fun openGroup(ilp: LinearLayout.LayoutParams){
 
         for (i in 0..180){
 
@@ -143,9 +162,38 @@ class BottomNavigationItem : RelativeLayout {
                 BottomNavigationHelper.dpToPx(i)
             )
 
-            imageView.layoutParams = ilp
+            handler.post {
+                imageView.layoutParams = ilp
+            }
 
-            Thread.sleep(10)
+            Thread.sleep(1)
+
+            if (i == 179){
+                groupIsOpened = true
+            }
+        }
+    }
+
+    private fun closeGroup(ilp: LinearLayout.LayoutParams){
+
+        for (i in 180 downTo 0){
+
+            ilp.setMargins(
+                BottomNavigationHelper.dpToPx(0),
+                BottomNavigationHelper.dpToPx(6),
+                BottomNavigationHelper.dpToPx(0),
+                BottomNavigationHelper.dpToPx(i)
+            )
+
+            handler.post {
+                imageView.layoutParams = ilp
+            }
+
+            Thread.sleep(1)
+
+            if (i == 1){
+                groupIsOpened = false
+            }
         }
     }
 }
