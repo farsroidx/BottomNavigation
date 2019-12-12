@@ -117,7 +117,6 @@ class BottomNavigationItem : RelativeLayout {
         shape.visibility = View.VISIBLE
         imageView.visibility = View.VISIBLE
         textView.visibility = View.VISIBLE
-        textView.setTextColor(Color.WHITE)
         textView.isSelected = true
 
         invalidate()
