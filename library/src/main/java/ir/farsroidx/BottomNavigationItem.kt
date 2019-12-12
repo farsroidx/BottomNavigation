@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import com.airbnb.paris.annotations.Styleable
@@ -101,17 +102,17 @@ class BottomNavigationItem : RelativeLayout {
         val ilp = imageView.layoutParams as LinearLayout.LayoutParams
         ilp.setMargins(
             BottomNavigationHelper.dpToPx(0),
-            BottomNavigationHelper.dpToPx(4),
+            BottomNavigationHelper.dpToPx(6),
             BottomNavigationHelper.dpToPx(0),
-            BottomNavigationHelper.dpToPx(4)
+            BottomNavigationHelper.dpToPx(2)
         )
 
-        ilp.width = BottomNavigationHelper.dpToPx(55)
-        ilp.height = BottomNavigationHelper.dpToPx(55)
+        ilp.width = BottomNavigationHelper.dpToPx(45)
+        ilp.height = BottomNavigationHelper.dpToPx(45)
         imageView.layoutParams = ilp
 
         val tlp = textView.layoutParams as LinearLayout.LayoutParams
-        tlp.width = BottomNavigationHelper.dpToPx(80)
+        tlp.width = BottomNavigationHelper.dpToPx(65)
         textView.layoutParams = tlp
 
         shape.visibility = View.VISIBLE
@@ -127,4 +128,24 @@ class BottomNavigationItem : RelativeLayout {
         invalidate()
     }
 
+    fun openGroupMenu() {
+
+        val ilp = imageView.layoutParams as LinearLayout.LayoutParams
+
+
+
+        for (i in 0..180){
+
+            ilp.setMargins(
+                BottomNavigationHelper.dpToPx(0),
+                BottomNavigationHelper.dpToPx(6),
+                BottomNavigationHelper.dpToPx(0),
+                BottomNavigationHelper.dpToPx(i)
+            )
+
+            imageView.layoutParams = ilp
+
+            Thread.sleep(10)
+        }
+    }
 }

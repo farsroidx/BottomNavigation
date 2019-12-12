@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.annotation.MenuRes
@@ -51,6 +52,10 @@ class BottomNavigation : FrameLayout {
                 BottomNavigationHelper.dpToPx(56),
                 Gravity.BOTTOM
             )
+
+            val vid = View.generateViewId()
+            id = vid
+
             setBackgroundColor(COLOR_BACKGROUND)
         }
 
@@ -111,10 +116,15 @@ class BottomNavigation : FrameLayout {
             }
 
             itemView.setOnClickListener {
-                currentItem = i
-                Log.d("CentralCore" , "current: $i")
 
-                createMenu(menu)
+                if (currentItem != i){
+                    currentItem = i
+                    Log.d("CentralCore" , "current: $i")
+
+                    createMenu(menu)
+                } else {
+                    itemView.openGroupMenu()
+                }
             }
         }
     }
