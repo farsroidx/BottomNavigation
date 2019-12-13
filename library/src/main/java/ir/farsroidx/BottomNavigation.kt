@@ -132,10 +132,19 @@ class BottomNavigation : FrameLayout {
                     }
                 }
 
+                if (menu[position].hasSubMenu()) {
+                    return@setOnClickListener
+                }
+
                 onMenuItemClickListener?.onClicked(menu[position], position)
             }
 
             itemView.setOnLongClickListener {
+
+                if (menu[position].hasSubMenu()) {
+                    return@setOnLongClickListener false
+                }
+
                 onMenuItemClickListener?.onLongClicked(menu[position], position)
                 return@setOnLongClickListener false
             }

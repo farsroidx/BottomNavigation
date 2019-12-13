@@ -6,6 +6,7 @@
     android:background="#D6D6D6">
 
     <ir.farsroidx.BottomNavigation
+        android:id="@+id/bottomMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

@@ -12,6 +12,7 @@ import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.get
@@ -186,6 +187,10 @@ class BottomNavigationItem : RelativeLayout {
 
             if (position == size - 1) {
                 groupIsOpened = true
+            }
+
+            itemView.setOnClickListener {
+                Toast.makeText(context, "sub menu: $text" , Toast.LENGTH_LONG).show()
             }
 
             Thread.sleep(200)
