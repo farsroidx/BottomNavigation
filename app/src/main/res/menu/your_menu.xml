@@ -29,4 +29,22 @@
         android:title="Group"
         android:icon="@drawable/icon_group"/>
 
+    <item android:id="@+id/h"
+        android:title="Help"
+        android:icon="@drawable/icon_help">
+
+        <menu>
+
+            <item android:id="@+id/i"
+                android:title="Information"
+                android:icon="@drawable/icon_information"/>
+
+            <item android:id="@+id/j"
+                android:title="Jabber"
+                android:icon="@drawable/icon_jabber"/>
+
+        </menu>
+
+    </item>
+
 </menu>

@@ -1,15 +1,20 @@
 package ir.farsroidx
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.view.SubMenu
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.get
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.extensions.style
 
@@ -33,7 +38,10 @@ class BottomNavigationItem : RelativeLayout {
 
     private lateinit var shape: FrameLayout
     private lateinit var imageView: AppCompatImageView
+    private lateinit var subMenus: LinearLayout
     private lateinit var textView: AppCompatTextView
+
+    private var colorFilter: Int = Color.DKGRAY
 
     private var groupIsOpened = false
     private var groupChangeClicked = false
@@ -46,6 +54,7 @@ class BottomNavigationItem : RelativeLayout {
 
         shape = view.findViewById(R.id.shape)
         imageView = view.findViewById(R.id.imageView)
+        subMenus = view.findViewById(R.id.subMenus)
         textView  = view.findViewById(R.id.textView)
     }
 
@@ -56,6 +65,7 @@ class BottomNavigationItem : RelativeLayout {
 
     fun setColorFilter(color: Int, mode: PorterDuff.Mode) {
         imageView.setColorFilter(color, mode)
+        colorFilter = color
         invalidate()
     }
 
@@ -75,7 +85,7 @@ class BottomNavigationItem : RelativeLayout {
             BottomNavigationHelper.dpToPx(2),
             BottomNavigationHelper.dpToPx(2),
             BottomNavigationHelper.dpToPx(2),
-            BottomNavigationHelper.dpToPx(2)
+            BottomNavigationHelper.dpToPx(0)
         )
         ilp.width = BottomNavigationHelper.dpToPx(38)
         ilp.weight = 1f
@@ -104,7 +114,7 @@ class BottomNavigationItem : RelativeLayout {
             BottomNavigationHelper.dpToPx(0),
             BottomNavigationHelper.dpToPx(6),
             BottomNavigationHelper.dpToPx(0),
-            BottomNavigationHelper.dpToPx(2)
+            BottomNavigationHelper.dpToPx(0)
         )
 
         ilp.width = BottomNavigationHelper.dpToPx(45)
@@ -128,7 +138,7 @@ class BottomNavigationItem : RelativeLayout {
         invalidate()
     }
 
-    fun openGroupMenu() {
+    fun openGroupMenu(subMenu: SubMenu) {
 
         if (groupChangeClicked) {
             return
@@ -141,9 +151,9 @@ class BottomNavigationItem : RelativeLayout {
         Thread(Runnable {
 
             if (groupIsOpened){
-                closeGroup(ilp)
+                closeGroup()
             } else {
-                openGroup(ilp)
+                openGroup(subMenu ,ilp)
             }
 
             groupChangeClicked = false
@@ -151,49 +161,93 @@ class BottomNavigationItem : RelativeLayout {
         }).start()
     }
 
-    private fun openGroup(ilp: LinearLayout.LayoutParams){
+    private fun openGroup(subMenu: SubMenu, ilp: LinearLayout.LayoutParams){
 
-        for (i in 0..180){
+        mainThread {
+            subMenus.visibility = View.VISIBLE
+        }
 
-            ilp.setMargins(
-                BottomNavigationHelper.dpToPx(0),
-                BottomNavigationHelper.dpToPx(6),
-                BottomNavigationHelper.dpToPx(0),
-                BottomNavigationHelper.dpToPx(i)
-            )
+        val size = subMenu.size()
 
-            handler.post {
-                imageView.layoutParams = ilp
+        for (position in 0 until size){
+
+            val menu = subMenu[position]
+            val imageView = AppCompatImageView(context)
+            imageView.layoutParams = ilp
+            imageView.apply {
+                setPadding(
+                    BottomNavigationHelper.dpToPx(4),
+                    BottomNavigationHelper.dpToPx(4),
+                    BottomNavigationHelper.dpToPx(4),
+                    BottomNavigationHelper.dpToPx(4)
+                )
             }
 
-            Thread.sleep(1)
+            val drawable = menu.icon
+            imageView.setImageDrawable(drawable!!)
+            imageView.setColorFilter(colorFilter)
 
-            if (i == 179){
+            mainThread {
+                showSubMenu(imageView)
+            }
+
+            if (position == size - 1) {
                 groupIsOpened = true
             }
+
+            Thread.sleep(300)
         }
     }
 
-    private fun closeGroup(ilp: LinearLayout.LayoutParams){
+    private fun closeGroup(){
 
-        for (i in 180 downTo 0){
+        val count = subMenus.childCount - 1
 
-            ilp.setMargins(
-                BottomNavigationHelper.dpToPx(0),
-                BottomNavigationHelper.dpToPx(6),
-                BottomNavigationHelper.dpToPx(0),
-                BottomNavigationHelper.dpToPx(i)
-            )
+        for (position in count downTo 0){
 
-            handler.post {
-                imageView.layoutParams = ilp
+            mainThread {
+                hideSubMenu(position, subMenus.getChildAt(position))
             }
 
-            Thread.sleep(1)
+            Thread.sleep(300)
 
-            if (i == 1){
+            if (position == 1){
                 groupIsOpened = false
             }
+        }
+
+        mainThread {
+            subMenus.visibility = View.GONE
+        }
+    }
+
+    private fun hideSubMenu(position: Int, view: View){
+        val animation = AnimationUtils.loadAnimation(context, R.anim.animation_hide_sub_menu)
+        animation.setAnimationListener(object: Animation.AnimationListener{
+            override fun onAnimationRepeat(animation: Animation?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                subMenus.removeViewAt(position)
+            }
+
+            override fun onAnimationStart(animation: Animation?) {
+
+            }
+        })
+        view.startAnimation(animation)
+    }
+
+    private fun showSubMenu(view: View){
+        subMenus.addView(view, 0)
+        val animation = AnimationUtils.loadAnimation(context, R.anim.animation_show_sub_menu)
+        view.startAnimation(animation)
+    }
+
+    private fun mainThread(block: () -> Unit){
+        handler.post {
+            block()
         }
     }
 }

@@ -26,7 +26,7 @@ class BottomNavigation : FrameLayout {
         private var COLOR_ITEM_NORMAL  = Color.parseColor("#000000")
         private var COLOR_ITEM_SELECTED = Color.parseColor("#FFFFFF")
 
-        private var currentItem = 4
+        private var defPos = 0
     }
 
     constructor(context: Context):
@@ -98,7 +98,7 @@ class BottomNavigation : FrameLayout {
 
     @Attr(R2.styleable.BottomNavigation_defaultPosition)
     fun setDefaultPosition(defaultPosition: Int) {
-        currentItem = defaultPosition
+        defPos = defaultPosition
     }
 
     private fun inflateMenu(menuId: Int) {
@@ -115,7 +115,7 @@ class BottomNavigation : FrameLayout {
 
             val itemView = BottomNavigationItem(context)
 
-            if (currentItem == position){
+            if (defPos == position){
                 setupCurrentItem(itemView, menu[position])
             } else {
                 setupItem(itemView, menu[position])
@@ -123,11 +123,13 @@ class BottomNavigation : FrameLayout {
 
             itemView.setOnClickListener {
 
-                if (currentItem != position){
-                    currentItem = position
+                if (defPos != position){
+                    defPos = position
                     createMenu(menu)
                 } else {
-                    itemView.openGroupMenu()
+                    if (menu[position].hasSubMenu()){
+                        itemView.openGroupMenu(menu[position].subMenu)
+                    }
                 }
 
                 onMenuItemClickListener?.onClicked(menu[position], position)
@@ -143,12 +145,14 @@ class BottomNavigation : FrameLayout {
     private fun setupCurrentItem(itemView: BottomNavigationItem, menuItem: MenuItem){
 
         val layout = LinearLayout(context)
-        layout.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
-            gravity = Gravity.CENTER
-            weight = 0f
+        layout.apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = Gravity.CENTER
+                weight = 0f
+            }
         }
 
         itemView.layoutParams = LinearLayout.LayoutParams(
@@ -173,12 +177,14 @@ class BottomNavigation : FrameLayout {
     private fun setupItem(itemView: BottomNavigationItem, menuItem: MenuItem){
 
         val layout = LinearLayout(context)
-        layout.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            BottomNavigationHelper.dpToPx(56)
-        ).apply {
-            gravity = Gravity.BOTTOM
-            weight = 1f
+        layout.apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                BottomNavigationHelper.dpToPx(56)
+            ).apply {
+                gravity = Gravity.BOTTOM
+                weight = 1f
+            }
         }
 
         itemView.layoutParams = LinearLayout.LayoutParams(
