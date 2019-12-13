@@ -128,7 +128,7 @@ class BottomNavigation : FrameLayout {
                     createMenu(menu)
                 } else {
                     if (menu[position].hasSubMenu()){
-                        itemView.openGroupMenu(menu[position].subMenu)
+                        itemView.openGroupMenu(menu[position].subMenu, onMenuItemClickListener)
                     }
                 }
 
@@ -136,17 +136,7 @@ class BottomNavigation : FrameLayout {
                     return@setOnClickListener
                 }
 
-                onMenuItemClickListener?.onClicked(menu[position], position)
-            }
-
-            itemView.setOnLongClickListener {
-
-                if (menu[position].hasSubMenu()) {
-                    return@setOnLongClickListener false
-                }
-
-                onMenuItemClickListener?.onLongClicked(menu[position], position)
-                return@setOnLongClickListener false
+                onMenuItemClickListener?.onItemClicked(menu[position])
             }
         }
     }
@@ -220,7 +210,6 @@ class BottomNavigation : FrameLayout {
     }
 
     interface OnMenuItemClickListener {
-        fun onClicked(menuItem: MenuItem, position: Int)
-        fun onLongClicked(menuItem: MenuItem, position: Int)
+        fun onItemClicked(menuItem: MenuItem)
     }
 }

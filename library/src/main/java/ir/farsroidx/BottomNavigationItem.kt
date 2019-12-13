@@ -12,7 +12,6 @@ import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.get
@@ -139,7 +138,7 @@ class BottomNavigationItem : RelativeLayout {
         invalidate()
     }
 
-    fun openGroupMenu(subMenu: SubMenu) {
+    fun openGroupMenu(subMenu: SubMenu, listener: BottomNavigation.OnMenuItemClickListener?) {
 
         if (groupChangeClicked) {
             return
@@ -152,7 +151,7 @@ class BottomNavigationItem : RelativeLayout {
             if (groupIsOpened){
                 closeGroup()
             } else {
-                openGroup(subMenu)
+                openGroup(subMenu, listener)
             }
 
             groupChangeClicked = false
@@ -160,7 +159,7 @@ class BottomNavigationItem : RelativeLayout {
         }).start()
     }
 
-    private fun openGroup(subMenu: SubMenu){
+    private fun openGroup(subMenu: SubMenu, listener: BottomNavigation.OnMenuItemClickListener?){
 
         mainThread {
             subMenus.visibility = View.VISIBLE
@@ -190,7 +189,7 @@ class BottomNavigationItem : RelativeLayout {
             }
 
             itemView.setOnClickListener {
-                Toast.makeText(context, "sub menu: $text" , Toast.LENGTH_LONG).show()
+                listener?.onItemClicked(menu)
             }
 
             Thread.sleep(200)
