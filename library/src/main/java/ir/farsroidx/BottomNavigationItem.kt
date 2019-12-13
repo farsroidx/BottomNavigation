@@ -146,14 +146,12 @@ class BottomNavigationItem : RelativeLayout {
             groupChangeClicked = true
         }
 
-        val ilp = imageView.layoutParams as LinearLayout.LayoutParams
-
         Thread(Runnable {
 
             if (groupIsOpened){
                 closeGroup()
             } else {
-                openGroup(subMenu ,ilp)
+                openGroup(subMenu)
             }
 
             groupChangeClicked = false
@@ -161,7 +159,7 @@ class BottomNavigationItem : RelativeLayout {
         }).start()
     }
 
-    private fun openGroup(subMenu: SubMenu, ilp: LinearLayout.LayoutParams){
+    private fun openGroup(subMenu: SubMenu){
 
         mainThread {
             subMenus.visibility = View.VISIBLE
@@ -172,30 +170,25 @@ class BottomNavigationItem : RelativeLayout {
         for (position in 0 until size){
 
             val menu = subMenu[position]
-            val imageView = AppCompatImageView(context)
-            imageView.layoutParams = ilp
-            imageView.apply {
-                setPadding(
-                    BottomNavigationHelper.dpToPx(4),
-                    BottomNavigationHelper.dpToPx(4),
-                    BottomNavigationHelper.dpToPx(4),
-                    BottomNavigationHelper.dpToPx(4)
-                )
-            }
+            val itemView = BottomNavigationGroupItem(context)
 
             val drawable = menu.icon
-            imageView.setImageDrawable(drawable!!)
-            imageView.setColorFilter(colorFilter)
+            val text     = menu.title.toString()
+
+            itemView.setColorFilter(colorFilter)
+            itemView.setImageDrawable(drawable!!)
+
+            itemView.setText(text)
 
             mainThread {
-                showSubMenu(imageView)
+                showSubMenu(itemView)
             }
 
             if (position == size - 1) {
                 groupIsOpened = true
             }
 
-            Thread.sleep(300)
+            Thread.sleep(200)
         }
     }
 
@@ -209,11 +202,11 @@ class BottomNavigationItem : RelativeLayout {
                 hideSubMenu(position, subMenus.getChildAt(position))
             }
 
-            Thread.sleep(300)
-
             if (position == 1){
                 groupIsOpened = false
             }
+
+            Thread.sleep(200)
         }
 
         mainThread {

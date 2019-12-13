@@ -13,10 +13,18 @@
 
     <!-- BottomNavigationItem -->
     <declare-styleable name="BottomNavigationItem">
-        <attr name="menu" />
         <attr name="isActive" format="boolean"/>
     </declare-styleable>
 
     <color name="defaultBottomNavigationShapeItemBackground">#e91e63</color>
+
+    <!-- /////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
+
+    <!-- BottomNavigationGroupItem -->
+    <declare-styleable name="BottomNavigationGroupItem">
+
+    </declare-styleable>
+
+    <color name="defaultBottomNavigationShapeGroupItemBackground">#e91e63</color>
 
 </resources>
